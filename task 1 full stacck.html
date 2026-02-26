@@ -1,0 +1,155 @@
+<?php
+// DATABASE CONNECTION
+$conn = new mysqli("localhost", "root", "", "student_registration_system");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// INSERT DATA
+if (isset($_POST['submit'])) {
+
+    $name = $_POST['full_name'];
+    $email = $_POST['email'];
+    $dob = $_POST['dob'];
+    $department = $_POST['department'];
+    $phone = $_POST['phone'];
+
+    $sql = "INSERT INTO students (full_name, email, date_of_birth, department, phone)
+            VALUES ('$name', '$email', '$dob', '$department', '$phone')";
+
+    $conn->query($sql);
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #4e73df, #1cc88a);
+        }
+
+        .container {
+            width: 400px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #4e73df;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2e59d9;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        function validateForm() {
+            let name = document.forms["regForm"]["full_name"].value;
+            let email = document.forms["regForm"]["email"].value;
+            let phone = document.forms["regForm"]["phone"].value;
+
+            if (name.length < 3) {
+                alert("Name must be at least 3 characters");
+                return false;
+            }
+
+            if (!email.includes("@")) {
+                alert("Enter valid email");
+                return false;
+            }
+
+            if (phone.length < 10) {
+                alert("Phone must be at least 10 digits");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>Student Registration Form</h2>
+
+    <form name="regForm" method="POST" onsubmit="return validateForm()">
+        <input type="text" name="full_name" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="date" name="dob" required>
+        <input type="text" name="department" placeholder="Department" required>
+        <input type="text" name="phone" placeholder="Phone Number" required>
+        <button type="submit" name="submit">Register</button>
+    </form>
+
+    <h3>Registered Students</h3>
+
+    <?php
+    // RETRIEVE DATA USING SELECT
+    $result = $conn->query("SELECT * FROM students");
+
+    if ($result->num_rows > 0) {
+        echo "<table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>DOB</th>
+                    <th>Department</th>
+                    <th>Phone</th>
+                </tr>";
+
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>".$row['student_id']."</td>
+                    <td>".$row['full_name']."</td>
+                    <td>".$row['email']."</td>
+                    <td>".$row['date_of_birth']."</td>
+                    <td>".$row['department']."</td>
+                    <td>".$row['phone']."</td>
+                  </tr>";
+        }
+
+        echo "</table>";
+    }
+    ?>
+
+</div>
+
+</body>
+</html>
