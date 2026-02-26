@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Feedback Form</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #36d1dc, #5b86e5);
+        }
+
+        .container {
+            width: 400px;
+            margin: 60px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        /* Highlight on hover */
+        input:hover, textarea:hover {
+            border-color: #5b86e5;
+            background-color: #f0f8ff;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #5b86e5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #3f6ad8;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Feedback Form</h2>
+
+    <form id="feedbackForm">
+
+        <input type="text" id="name" placeholder="Full Name">
+        <div id="nameError" class="error"></div>
+
+        <input type="email" id="email" placeholder="Email">
+        <div id="emailError" class="error"></div>
+
+        <textarea id="message" placeholder="Your Feedback"></textarea>
+        <div id="messageError" class="error"></div>
+
+        <!-- Double-click to submit -->
+        <button type="button" ondblclick="submitForm()">Double Click to Submit</button>
+
+    </form>
+</div>
+
+<script>
+    // Reusable validation functions
+    function validateName() {
+        let name = document.getElementById("name").value;
+        if (name.length < 3) {
+            document.getElementById("nameError").innerText = "Name must be at least 3 characters";
+            return false;
+        } else {
+            document.getElementById("nameError").innerText = "";
+            return true;
+        }
+    }
+
+    function validateEmail() {
+        let email = document.getElementById("email").value;
+        if (!email.includes("@")) {
+            document.getElementById("emailError").innerText = "Enter valid email";
+            return false;
+        } else {
+            document.getElementById("emailError").innerText = "";
+            return true;
+        }
+    }
+
+    function validateMessage() {
+        let message = document.getElementById("message").value;
+        if (message.length < 5) {
+            document.getElementById("messageError").innerText = "Feedback must be at least 5 characters";
+            return false;
+        } else {
+            document.getElementById("messageError").innerText = "";
+            return true;
+        }
+    }
+
+    // Validate on keypress (real-time validation)
+    document.getElementById("name").addEventListener("keyup", validateName);
+    document.getElementById("email").addEventListener("keyup", validateEmail);
+    document.getElementById("message").addEventListener("keyup", validateMessage);
+
+    // Double-click submit function
+    function submitForm() {
+        let validName = validateName();
+        let validEmail = validateEmail();
+        let validMessage = validateMessage();
+
+        if (validName && validEmail && validMessage) {
+            alert("✅ Feedback Submitted Successfully!");
+            document.getElementById("feedbackForm").reset();
+        } else {
+            alert("❌ Please correct errors before submitting.");
+        }
+    }
+</script>
+
+</body>
+</html>
